@@ -3,6 +3,7 @@ package pl.FilipRajmund;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 public class UserManagmentInMemoryRepository implements UserManagementRepository {
@@ -29,12 +30,15 @@ public class UserManagmentInMemoryRepository implements UserManagementRepository
     public List<User> findByName(String name) {
         return userMap.values().stream()
                 .filter(user -> name.equals(user.getName()))
-                .toList();
+                .collect(Collectors.toList());
     }
 
     @Override
     public void update(String email, User user) {
-        userMap.put(email, user);
+        if(!email.equals(user.getEmail())){
+            userMap.remove(email);
+        }
+        userMap.put(user.getEmail(), user);
     }
 
     @Override

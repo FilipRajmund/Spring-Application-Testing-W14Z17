@@ -41,7 +41,7 @@ public class UserManagementService {
 
     public void delete(String email) {
         if(userManagementRepository.findByEmail(email).isEmpty()){
-            throw new RuntimeException("User with email: [%s] does not exist".formatted(email));
+            throw new RuntimeException(String.format("User with email: [%s] does not exist", email));
         }
         userManagementRepository.delete(email);
     }

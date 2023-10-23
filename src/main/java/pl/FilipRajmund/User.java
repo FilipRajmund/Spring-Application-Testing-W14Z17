@@ -7,7 +7,7 @@ import lombok.With;
 @Value
 @Builder
 @With
-public class User implements  Comparable<User>{
+public class User implements Comparable<User> {
     String name;
     String surname;
     String email;
