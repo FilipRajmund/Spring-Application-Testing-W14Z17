@@ -50,9 +50,9 @@ public class UserManagementServiceTest {
         when(userManagementRepository.findByEmail(user2.getEmail()))
                 .thenReturn(Optional.empty())
                 .thenReturn(Optional.of(user2));
-        when(userManagementRepository.findByEmail(user2.getEmail()))
+        when(userManagementRepository.findByEmail(user3.getEmail()))
                 .thenReturn(Optional.empty())
-                .thenReturn(Optional.of(user2));
+                .thenReturn(Optional.of(user3));
         when(userManagementRepository.findAll()).thenReturn(List.of(user1, user2, user3));
         //when
         userManagementService.create(user1);
@@ -86,7 +86,7 @@ public class UserManagementServiceTest {
         //when, then
         userManagementService.create(user1);
         Throwable exception = Assertions.assertThrows(RuntimeException.class, () -> userManagementService.create(user2));
-        Assertions.assertEquals(String.format("USer with email: [%s] is already created", user1.getEmail()), exception.getMessage());
+        Assertions.assertEquals(String.format("User with email: [%s] is already created", user1.getEmail()), exception.getMessage());
     }
 
     @Test
@@ -135,9 +135,9 @@ public class UserManagementServiceTest {
     @Test
     void shouldModifyUserDataCorrectly() {
         //given
-        String email1 = "email@gmail.com";
-        String email2 = "email@gmail.com";
-        String email3 = "email@gmail.com";
+        String email1 = "email1@gmail.com";
+        String email2 = "email2@gmail.com";
+        String email3 = "email3@gmail.com";
         String emailNew = "newEmail@gmail.com";
         var user1 = someUser().withEmail(email1);
         var user2 = someUser().withEmail(email2);
