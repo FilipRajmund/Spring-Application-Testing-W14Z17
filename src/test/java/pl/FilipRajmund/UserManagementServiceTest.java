@@ -12,19 +12,18 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class UserManagementServiceTest {
+public class UserManagementServiceTest {
     @InjectMocks
     private UserManagementService userManagementService;
     @Mock
     private UserManagementRepository userManagementRepository;
 
     @Test
-    shouldCreateUserCorrectly() {
+    void shouldCreateUserCorrectly() {
         //given
         var user = someUser();
         when(userManagementRepository.findByEmail(user.getEmail()))
@@ -60,18 +59,18 @@ class UserManagementServiceTest {
         userManagementService.create(user2);
         userManagementService.create(user3);
 
-        var resul1 = userManagementService.findByEmail(user1.getEmail());
-        var resul2 = userManagementService.findByEmail(user2.getEmail());
-        var resul3 = userManagementService.findByEmail(user3.getEmail());
+        var result1 = userManagementService.findByEmail(user1.getEmail());
+        var result2 = userManagementService.findByEmail(user2.getEmail());
+        var result3 = userManagementService.findByEmail(user3.getEmail());
         var all = userManagementService.findAll();
         //then
         Assertions.assertEquals(3, all.size());
-        Assertions.assertTrue(resul1.isPresent());
-        Assertions.assertEquals(user1, result1.get);
-        Assertions.assertTrue(resul2.isPresent());
-        Assertions.assertEquals(user2, result1.get);
-        Assertions.assertTrue(resul3.isPresent());
-        Assertions.assertEquals(user3, result1.get);
+        Assertions.assertTrue(result1.isPresent());
+        Assertions.assertEquals(user1, result1.get());
+        Assertions.assertTrue(result2.isPresent());
+        Assertions.assertEquals(user2, result2.get());
+        Assertions.assertTrue(result3.isPresent());
+        Assertions.assertEquals(user3, result3.get());
     }
 
     @Test
@@ -83,7 +82,7 @@ class UserManagementServiceTest {
         var user2 = someUser().withEmail(duplicatedEmail);
         when(userManagementRepository.findByEmail(duplicatedEmail))
                 .thenReturn(Optional.empty())
-                .thenTrow(new RuntimeException(String.format("user with email: [%s] is already created", user1.getEmail())));
+                .thenThrow(new RuntimeException(String.format("user with email: [%s] is already created", user1.getEmail())));
         //when, then
         userManagementService.create(user1);
         Throwable exception = Assertions.assertThrows(RuntimeException.class, () -> userManagementService.create(user2));
@@ -165,7 +164,7 @@ class UserManagementServiceTest {
         userManagementService.create(user3);
 
         var all = userManagementService.findAll();
-        Assertions.assertEquals(3, all.size);
+        Assertions.assertEquals(3, all.size());
 
         var result1 = userManagementService.findByEmail(user1.getEmail());
         userManagementService.update(user1.getEmail(), user1.withEmail(emailNew));
@@ -195,7 +194,7 @@ class UserManagementServiceTest {
     }
 
     @Test
-    shouldDeleteCorrectly() {
+    void shouldDeleteUserCorrectly() {
         //given
         var user1 = someUser().withEmail("email1@gmail.com");
         var user2 = someUser().withEmail("email2@gmail.com");
@@ -213,7 +212,7 @@ class UserManagementServiceTest {
                 .thenReturn(List.of(user2, user3));
         //when
         var all = userManagementService.findAll();
-        Assertions.assertEquals(3, all.size);
+        Assertions.assertEquals(3, all.size());
         userManagementService.delete(user1.getEmail());
 
         var result1 = userManagementService.findByEmail(user1.getEmail());
@@ -233,7 +232,7 @@ class UserManagementServiceTest {
     @Test
     void shouldThrowWhenDeletetingNonExistingUser() {
         //given
-        var user1 = someUSer().withEmail("email1@gmail.com");
+        var user1 = someUser().withEmail("email1@gmail.com");
         //when, then
         Throwable excption = Assertions.assertThrows(RuntimeException.class, () ->
                 userManagementService.delete(user1.getEmail()));
